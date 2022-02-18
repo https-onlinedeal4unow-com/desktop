@@ -167,3 +167,8 @@ export function enablePullRequestQuickView(): boolean {
 export function enableHighSignalNotifications(): boolean {
   return enableBetaFeatures()
 }
+
+/** Feature flag for git worktree based conflict detection for rebasing */
+export function enableRebaseConflictDetection(): boolean {
+  return enableBetaFeatures()
+}

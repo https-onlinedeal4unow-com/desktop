@@ -1,9 +1,12 @@
 import { app, net } from 'electron'
 import { getArchitecture } from '../lib/get-architecture'
+import { getMainGUID } from '../lib/get-main-guid'
 
 const ErrorEndpoint = 'https://central.github.com/api/desktop/exception'
 const NonFatalErrorEndpoint =
   'https://central.github.com/api/desktop-non-fatal/exception'
+
+let hasSentFatalError = false
 
 /** Report the error to Central. */
 export async function reportError(
@@ -13,6 +16,17 @@ export async function reportError(
 ) {
   if (__DEV__) {
     return
+  }
+
+  // We never want to send more than one fatal error (i.e. crash) per
+  // application session. This guards against us ending up in a feedback loop
+  // where the act of reporting a crash triggers another unhandled exception
+  // which causes us to report a crash and so on and so forth.
+  if (nonFatal !== true) {
+    if (hasSentFatalError) {
+      return
+    }
+    hasSentFatalError = true
   }
 
   const data = new Map<string, string>()
@@ -28,6 +42,7 @@ export async function reportError(
   data.set('architecture', getArchitecture(app))
   data.set('sha', __SHA__)
   data.set('version', app.getVersion())
+  data.set('guid', await getMainGUID())
 
   if (extra) {
     for (const key of Object.keys(extra)) {

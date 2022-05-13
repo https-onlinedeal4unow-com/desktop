@@ -78,11 +78,6 @@ export function enableUpdateFromEmulatedX64ToARM64(): boolean {
   return enableBetaFeatures()
 }
 
-/** Should we allow using the save dialog when choosing where to clone a repo */
-export function enableSaveDialogOnCloneRepository(): boolean {
-  return true
-}
-
 /** Should we allow setting repository aliases? */
 export function enableRepositoryAliases(): boolean {
   return true
@@ -165,7 +160,17 @@ export function enablePullRequestQuickView(): boolean {
 
 /** Should we enable high-signal notifications? */
 export function enableHighSignalNotifications(): boolean {
-  return enableBetaFeatures()
+  return true
+}
+
+/** Should we enable PR review notifications? */
+export function enablePullRequestReviewNotifications(): boolean {
+  return true
+}
+
+/** Should we enable the rerunning of failed and single jobs aka action based checks */
+export function enableReRunFailedAndSingleCheckJobs(): boolean {
+  return true
 }
 
 /** Feature flag for git worktree based conflict detection for rebasing */
